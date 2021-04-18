@@ -48,7 +48,7 @@ stages:
         displayName: Deploy
         pool:
           vmImage: $(vmImageName)
-        environment: "jamyckub.dev"
+        environment: "charlie.dev"
         strategy:
           runOnce:
             deploy:
