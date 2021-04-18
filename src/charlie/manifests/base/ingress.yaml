@@ -1,18 +1,15 @@
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: hello-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: azure/application-gateway
 spec:
   rules:
-    - host: hello-guys.info
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
             backend:
-              service:
-                name: charlie-service
-                port:
-                  number: 8080
+              serviceName: charlie-service
+              servicePort: 8080
