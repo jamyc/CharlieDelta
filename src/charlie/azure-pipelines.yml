@@ -4,7 +4,7 @@ trigger:
       - master
   paths:
     include:
-      - src/delta/*
+      - src/charlie/*
 
 resources:
   - repo: self
@@ -12,7 +12,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: "c6352a79-511f-4425-bf8c-9ef0420e7437"
-  imageRepository: "delta"
+  imageRepository: "charlie"
   containerRegistry: "acrcloudengineer.azurecr.io"
   tag: "$(Build.BuildId)"
   imagePullSecret: "acrcloudengineer1ad9-auth"
@@ -34,12 +34,12 @@ stages:
             inputs:
               command: buildAndPush
               repository: $(imageRepository)
-              dockerfile: src/delta/Dockerfile
+              dockerfile: src/charlie/Dockerfile
               containerRegistry: $(dockerRegistryServiceConnection)
               tags: |
                 $(tag)
 
-          - upload: src/delta/manifests
+          - upload: src/charlie/manifests
             artifact: manifests
 
   - stage: Deploy
@@ -51,7 +51,7 @@ stages:
         displayName: Deploy
         pool:
           vmImage: $(vmImageName)
-        environment: "DeltaDev.dev"
+        environment: "CharlieDev.dev"
         strategy:
           runOnce:
             deploy:
