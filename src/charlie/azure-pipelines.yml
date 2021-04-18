@@ -17,7 +17,6 @@ variables:
   tag: "$(Build.BuildId)"
   imagePullSecret: "acrcloudengineer1ad9-auth"
 
-  # Agent VM image name
   vmImageName: "ubuntu-latest"
 
 stages:
