@@ -3,6 +3,6 @@ kind: Kustomization
 
 bases:
   - ../../base
-# images:
-#   - name: charlie
-#     newTag: dev
+
+patches:
+  - ingress_annotation.yaml
