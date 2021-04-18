@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: delta
-          image: delta:latest
-          imagePullPolicy: Never
+          image: acrcloudengineer.azurecr.io/delta
           resources:
             limits:
               memory: "64Mi"

@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: charlie
-          image: charlie:latest
-          imagePullPolicy: Never
+          image: acrcloudengineer.azurecr.io/charlie
           resources:
             limits:
               memory: "64Mi"
