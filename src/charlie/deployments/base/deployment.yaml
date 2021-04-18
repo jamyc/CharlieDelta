@@ -18,18 +18,9 @@ spec:
         - name: charlie
           image: charlie:latest
           imagePullPolicy: Never
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
           ports:
             - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: charlie-service
-spec:
-  selector:
-    app: charlie
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
