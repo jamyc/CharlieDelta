@@ -4,8 +4,8 @@ kind: Kustomization
 bases:
   - ../../base
 
-patches:
-  - replica_count.yaml
+resources:
+  - hpa.yaml
 
 images:
   - name: delta
