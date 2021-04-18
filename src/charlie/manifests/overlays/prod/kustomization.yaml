@@ -4,6 +4,9 @@ kind: Kustomization
 bases:
   - ../../base
 
+patches:
+  - ingress_annotation.yaml
+
 images:
   - name: charlie
     newTag: prod
