@@ -84,7 +84,7 @@ stages:
                     containers: |
                       $(containerRegistry)/$(imageRepository):$(tag)
 
-  - stage: Deploy Prod
+  - stage: DeployProd
     displayName: Deploy Prod
     dependsOn: Build
 
