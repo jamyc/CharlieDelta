@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: charlie 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: charlie
+  template:
+    metadata:
+      labels:
+        app: charlie 
+    spec:
+      containers:
+        - name: charlie 
+          image: acrcloudengineer.azurecr.io/charlie
+          ports:
+          - containerPort: 80
