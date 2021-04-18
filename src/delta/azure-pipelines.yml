@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: "c6352a79-511f-4425-bf8c-9ef0420e7437"
-  imageRepository: "charlie"
+  imageRepository: "delta"
   containerRegistry: "acrcloudengineer.azurecr.io"
   dockerfilePath: "**/Dockerfile"
   tag: "$(Build.BuildId)"
@@ -48,7 +48,7 @@ stages:
         displayName: Deploy
         pool:
           vmImage: $(vmImageName)
-        environment: "charlie.dev"
+        environment: "delta.dev"
         strategy:
           runOnce:
             deploy:
