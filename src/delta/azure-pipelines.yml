@@ -13,7 +13,6 @@ variables:
   dockerRegistryServiceConnection: "c6352a79-511f-4425-bf8c-9ef0420e7437"
   imageRepository: "delta"
   containerRegistry: "acrcloudengineer.azurecr.io"
-  dockerfilePath: "Dockerfile"
   tag: "$(Build.BuildId)"
   imagePullSecret: "acrcloudengineer1ad9-auth"
 
@@ -34,7 +33,7 @@ stages:
             inputs:
               command: buildAndPush
               repository: $(imageRepository)
-              dockerfile: $(dockerfilePath)
+              dockerfile: src/delta/Dockerfile
               containerRegistry: $(dockerRegistryServiceConnection)
               tags: |
                 $(tag)
