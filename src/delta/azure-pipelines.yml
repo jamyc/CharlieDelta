@@ -38,7 +38,7 @@ stages:
               tags: |
                 $(tag)
 
-          - upload: manifests
+          - upload: src/delta/manifests
             artifact: manifests
 
   - stage: Deploy
