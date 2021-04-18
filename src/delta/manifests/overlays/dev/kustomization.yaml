@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - ../../base
-
-images:
-  - name: charlie
-    newTag: dev
+# images:
+#   - name: delta
+#     newTag: dev
