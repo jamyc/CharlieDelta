@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: charlie-deployment
+  labels:
+    app: charlie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: charlie
+  template:
+    metadata:
+      labels:
+        app: charlie
+    spec:
+      containers:
+        - name: charlie
+          image: charlie:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: charlie-service
+spec:
+  selector:
+    app: charlie
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

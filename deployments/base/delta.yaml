@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delta-deployment
+  labels:
+    app: delta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delta
+  template:
+    metadata:
+      labels:
+        app: delta
+    spec:
+      containers:
+        - name: delta
+          image: delta:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delta-service
+spec:
+  selector:
+    app: delta
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
