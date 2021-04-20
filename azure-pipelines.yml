@@ -3,20 +3,45 @@ pool:
 
 variables: 
   azureSubscription: Visual Studio Professional
-  resourceGroupName: rg-cloudengineer
+  appName: cloudengineerjamy
+  resourceGroupName: rg-$(appName)
   resourceGroupLocation: westeurope
 
 steps:
 # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
-- task: AzureCLI@2
-  displayName: Deploy Bicep Templates
-  inputs:
-    azureSubscription: $(azureSubscription)
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      echo 'Creating resource group $(resourceGroupName)...'
-      az group create --name $(resourceGroupName) --location $(resourceGroupLocation)
 
-      echo 'Deploying Bicep'
-      az deployment group create --template-file $(System.DefaultWorkingDirectory)/infra/main.bicep --resource-group $(resourceGroupName)
+- bash: az bicep build --files infra/main.bicep
+  displayName: "Compile Bicep to ARM"
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: "Deploy ARM"
+  inputs:
+    azureResourceManagerConnection: $(azureSubscription)
+    action: Create Or Update Resource Group
+    resourceGroupName: $(resourceGroupName)
+    location: $(resourceGroupLocation)
+    templateLocation: Linked artifact
+    csmFile: 'infra/azuredeploy.json' # created by bash script
+    deploymentMode: Incremental
+    deploymentOutputs: resourceGroupDeploymentOutputs
+
+- pwsh: |
+    $outputs = ConvertFrom-Json '$(resourceGroupDeploymentOutputs)'
+    foreach ($output in $outputs.PSObject.Properties) {
+        Write-Host "##vso[task.setvariable variable=DeployOutputs_$($output.Name)]$($output.Value.value)"
+    }
+  displayName: "Turn ARM outputs into variables"
+
+# - task: HelmDeploy@0
+#   inputs:
+#     connectionType: 'Azure Resource Manager'
+#     azureSubscription: 'Visual Studio Professional'
+#     azureResourceGroup: 'rg-cloudengineer'
+#     kubernetesCluster: 'aks-cloudengineer'
+#     namespace: 'namespace'
+#     command: 'install'
+#     chartType: 'Name'
+#     chartName: 'chartname'
+#     chartVersion: 'version'
+#     overrideValues: 'key1=val1,key2=val2'
+#     arguments: 'arguments'
