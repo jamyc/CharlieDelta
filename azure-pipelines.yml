@@ -10,7 +10,7 @@ variables:
 steps:
 # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
 
-- bash: az bicep build --files infra/main.bicep
+- bash: az bicep build --file infra/main.bicep
   displayName: "Compile Bicep to ARM"
 
 - task: AzureResourceManagerTemplateDeployment@3
