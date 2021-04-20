@@ -2,7 +2,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables: 
-  azureSubscription: 09b07dd6-fdc7-42cc-93ba-b27450a33f8a
+  azureSubscription: Visual Studio Professional
   resourceGroupName: rg-devcloudengineer
   resourceGroupLocation: westeurope
 
