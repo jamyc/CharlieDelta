@@ -39,6 +39,20 @@ steps:
   displayName: "Convert ARM outputs to Pipeline variables"
 
 - task: HelmDeploy@0
+  displayName: Helm add nginx repo
+  inputs:
+    namespace: ingress-nginx
+    command: repo
+    arguments: add nginx-stable https://helm.nginx.com/stable
+    
+- task: HelmDeploy@0
+  displayName: Helm repo update
+  inputs:
+    namespace: ingress-nginx
+    command: repo
+    arguments: update
+
+- task: HelmDeploy@0
   inputs:
     connectionType: Azure Resource Manager
     azureSubscription: Visual Studio Professional
