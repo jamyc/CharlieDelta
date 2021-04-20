@@ -10,21 +10,25 @@ variables:
 steps:
 # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
 
-- bash: az bicep build --file infra/main.bicep
-  displayName: "Compile Bicep to ARM"
+- pwsh: |
+    $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}''
+    Write-Host "##vso[task.setvariable variable=resourceGroupDeploymentOutputs]$json"
 
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: "Deploy ARM"
-  inputs:
-    azureResourceManagerConnection: $(azureSubscription)
-    action: Create Or Update Resource Group
-    resourceGroupName: $(resourceGroupName)
-    location: $(resourceGroupLocation)
-    templateLocation: Linked artifact
-    csmFile: infra/main.json # created by bash script
-    deploymentMode: Incremental
-    deploymentOutputs: resourceGroupDeploymentOutputs
-    overrideParameters: -appName $(appName)
+# - bash: az bicep build --file infra/main.bicep
+#   displayName: "Compile Bicep to ARM"
+
+# - task: AzureResourceManagerTemplateDeployment@3
+#   displayName: "Deploy ARM"
+#   inputs:
+#     azureResourceManagerConnection: $(azureSubscription)
+#     action: Create Or Update Resource Group
+#     resourceGroupName: $(resourceGroupName)
+#     location: $(resourceGroupLocation)
+#     templateLocation: Linked artifact
+#     csmFile: infra/main.json # created by bash script
+#     deploymentMode: Incremental
+#     deploymentOutputs: resourceGroupDeploymentOutputs
+#     overrideParameters: -appName $(appName)
 
 - pwsh: |
     Write-Output '$(resourceGroupDeploymentOutputs)'
