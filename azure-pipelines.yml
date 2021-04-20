@@ -38,7 +38,7 @@ steps:
   inputs:
     connectionType: Azure Resource Manager
     azureSubscription: Visual Studio Professional
-    azureResourceGroup: $(resourceGroup)
+    azureResourceGroup: $(resourceGroupName)
     kubernetesCluster: $(DeployOutputs_aksClusterName)
     namespace: dev
     command: install
