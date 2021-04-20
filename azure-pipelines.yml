@@ -15,7 +15,7 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      echo 'Creating resource group $(resourceGroupName)...''
+      echo 'Creating resource group $(resourceGroupName)...'
       az group create --name $(resourceGroupName) --location $(resourceGroupLocation)
 
       echo 'Deploying Bicep'
