@@ -3,7 +3,7 @@ pool:
 
 variables: 
   azureSubscription: Visual Studio Professional
-  resourceGroupName: rg-devcloudengineer
+  resourceGroupName: rg-cloudengineer
   resourceGroupLocation: westeurope
 
 steps:
