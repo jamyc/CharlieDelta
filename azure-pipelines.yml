@@ -21,28 +21,28 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: $(resourceGroupLocation)
     templateLocation: Linked artifact
-    csmFile: 'infra/main.json' # created by bash script
+    csmFile: infra/main.json # created by bash script
     deploymentMode: Incremental
     deploymentOutputs: resourceGroupDeploymentOutputs
     overrideParameters: -appName $(appName)
 
 - pwsh: |
+    Write-Output '$(resourceGroupDeploymentOutputs)'
     $outputs = ConvertFrom-Json '$(resourceGroupDeploymentOutputs)'
     foreach ($output in $outputs.PSObject.Properties) {
         Write-Host "##vso[task.setvariable variable=DeployOutputs_$($output.Name)]$($output.Value.value)"
     }
-  displayName: "Turn ARM outputs into variables"
+  displayName: "Convert ARM outputs to Pipeline variables"
 
-# - task: HelmDeploy@0
-#   inputs:
-#     connectionType: 'Azure Resource Manager'
-#     azureSubscription: 'Visual Studio Professional'
-#     azureResourceGroup: 'rg-cloudengineer'
-#     kubernetesCluster: 'aks-cloudengineer'
-#     namespace: 'namespace'
-#     command: 'install'
-#     chartType: 'Name'
-#     chartName: 'chartname'
-#     chartVersion: 'version'
-#     overrideValues: 'key1=val1,key2=val2'
-#     arguments: 'arguments'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: Azure Resource Manager
+    azureSubscription: Visual Studio Professional
+    azureResourceGroup: $(resourceGroup)
+    kubernetesCluster: $(DeployOutputs_aksClusterName)
+    namespace: dev
+    command: install
+    chartType: Name
+    chartName: nginx-stable/nginx-ingress
+    releaseName: nginx-ingress-dev
+    overrideValues: controller.ingressClass=ingressdev
