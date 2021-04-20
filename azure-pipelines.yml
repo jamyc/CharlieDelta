@@ -11,7 +11,7 @@ steps:
 # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
 
 - pwsh: |
-    $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}''
+    $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}'
     Write-Host "##vso[task.setvariable variable=resourceGroupDeploymentOutputs]$json"
 
 # - bash: az bicep build --file infra/main.bicep
