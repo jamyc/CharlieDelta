@@ -24,6 +24,7 @@ steps:
     csmFile: 'infra/main.json' # created by bash script
     deploymentMode: Incremental
     deploymentOutputs: resourceGroupDeploymentOutputs
+    overrideParameters: -appName $(appName)
 
 - pwsh: |
     $outputs = ConvertFrom-Json '$(resourceGroupDeploymentOutputs)'
