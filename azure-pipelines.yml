@@ -4,19 +4,19 @@ pool:
 variables: 
   azureSubscription: 09b07dd6-fdc7-42cc-93ba-b27450a33f8a
   resourceGroupName: rg-devcloudengineer
-  resourceLocation: westeurope
+  resourceGroupLocation: westeurope
+
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
 # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
-# - task: AzureCLI@2
-#   displayName: "Deploy Hello Azure Bicep"
-#   inputs:
-#     azureSubscription: '$(azureSubscription)'
-#     scriptType: bash
-#     scriptLocation: inlineScript
-#     inlineScript: |
-#       az group create --name $(resourceGroupName) --location $(resourceLocation)
+- task: AzureCLI@2
+  displayName: Deploy Bicep Templates
+  inputs:
+    azureSubscription: $(azureSubscription)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      echo 'Creating resource group $(resourceGroupName)...''
+      az group create --name $(resourceGroupName) --location $(resourceGroupLocation)
 
-#       az deployment group create -f $(System.DefaultWorkingDirectory)/BicepFiles/main.json -g bicep-rg
+      echo 'Deploying Bicep'
+      az deployment group create --template-file $(System.DefaultWorkingDirectory)/infra/main.bicep --resource-group $(resourceGroupName)
