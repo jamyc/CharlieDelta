@@ -1,13 +1,15 @@
+param appName string
+
 module cr 'containerregistry.bicep' = {
   name: 'acrDeploy'
   params: {
-    acrName: 'acrcloudengineer'
+    acrName: 'acr${appName}'
   }
 }
 
 module aks 'kubernetesservice.bicep' = {
   name: 'aksDeploy'
   params: {
-    clusterName: 'aks-cloudengineer'
+    clusterName: 'aks-${appName}'
   }
 }
