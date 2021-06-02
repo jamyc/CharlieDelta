@@ -11,7 +11,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: "c6352a79-511f-4425-bf8c-9ef0420e7437"
+  dockerRegistryServiceConnection: "53774902-ced3-420a-80f8-2acf1ae28858"
   imageRepository: "delta"
   containerRegistry: "acrcloudengineer.azurecr.io"
   tag: "$(Build.BuildId)"
