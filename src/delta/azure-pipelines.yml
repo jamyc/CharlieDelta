@@ -13,9 +13,9 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: "53774902-ced3-420a-80f8-2acf1ae28858"
   imageRepository: "delta"
-  containerRegistry: "acrcloudengineer.azurecr.io"
+  containerRegistry: "acrcloudengineerjamy.azurecr.io"
   tag: "$(Build.BuildId)"
-  imagePullSecret: "acrcloudengineer1ad9-auth"
+  imagePullSecret: "acrcloudengineer-auth"
 
   # Agent VM image name
   vmImageName: "ubuntu-latest"

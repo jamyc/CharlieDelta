@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: delta
-          image: acrcloudengineer.azurecr.io/delta
+          image: acrcloudengineerjamy.azurecr.io/delta
           resources:
             requests:
               memory: 32Mi
