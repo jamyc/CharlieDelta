@@ -1,19 +1,22 @@
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - infra/*
+
 pool:
   vmImage: ubuntu-latest
 
 variables:
   azureSubscription: Visual Studio Professional
-  appName: cloudengineerjamy
+  appName: cloudengineerjamy2
   resourceGroupName: rg-$(appName)
   resourceGroupLocation: westeurope
 
 steps:
   # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
-
-  # - pwsh: |
-  #     $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}'
-  #     Write-Host "##vso[task.setvariable variable=resourceGroupDeploymentOutputs]$json"
-
   - bash: az bicep build --file infra/main.bicep
     displayName: "Compile Bicep to ARM"
 
@@ -37,29 +40,3 @@ steps:
           Write-Host "##vso[task.setvariable variable=DeployOutputs_$($output.Name)]$($output.Value.value)"
       }
     displayName: "Convert ARM outputs to Pipeline variables"
-# - task: HelmDeploy@0
-#   displayName: Helm add nginx repo
-#   inputs:
-#     namespace: ingress-nginx
-#     command: repo
-#     arguments: add nginx-stable https://helm.nginx.com/stable
-
-# - task: HelmDeploy@0
-#   displayName: Helm repo update
-#   inputs:
-#     namespace: ingress-nginx
-#     command: repo
-#     arguments: update
-
-# - task: HelmDeploy@0
-#   inputs:
-#     connectionType: Azure Resource Manager
-#     azureSubscription: Visual Studio Professional
-#     azureResourceGroup: $(resourceGroupName)
-#     kubernetesCluster: $(DeployOutputs_aksClusterName)
-#     namespace: dev
-#     command: install
-#     chartType: Name
-#     chartName: nginx-stable/nginx-ingress
-#     releaseName: nginx-ingress-dev
-#     overrideValues: controller.ingressClass=ingressdev

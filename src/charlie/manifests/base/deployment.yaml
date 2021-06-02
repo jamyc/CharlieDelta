@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: charlie
-          image: acrcloudengineerjamy.azurecr.io/charlie
+          image: acrcloudengineerjamy2.azurecr.io/charlie
           resources:
             limits:
               memory: "64Mi"

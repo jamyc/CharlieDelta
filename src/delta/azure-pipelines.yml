@@ -6,19 +6,16 @@ trigger:
     include:
       - src/delta/*
 
-resources:
-  - repo: self
-
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: "ContainerRegistryServiceConnection"
-  imageRepository: "delta"
-  containerRegistry: "acrcloudengineerjamy.azurecr.io"
-  tag: "$(Build.BuildId)"
-  imagePullSecret: "acrcloudengineer-auth"
+  dockerRegistryServiceConnection: ContainerRegistryServiceConnection
+  imageRepository: delta
+  containerRegistry: acrcloudengineerjamy2.azurecr.io
+  tag: $(Build.BuildId)
+  imagePullSecret: acrcloudengineer-auth
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: ubuntu-latest
 
 stages:
   - stage: Build
@@ -51,7 +48,7 @@ stages:
         displayName: Deploy Dev
         pool:
           vmImage: $(vmImageName)
-        environment: "DeltaDev"
+        environment: DeltaDev
         strategy:
           runOnce:
             deploy:
@@ -71,6 +68,7 @@ stages:
                     secretName: $(imagePullSecret)
                     namespace: dev
                     dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+                    kubernetesServiceConnection: KubernetesDevServiceConnection
 
                 - task: KubernetesManifest@0
                   name: bake
@@ -90,6 +88,7 @@ stages:
                       $(imagePullSecret)
                     containers: |
                       $(containerRegistry)/$(imageRepository):$(tag)
+                    kubernetesServiceConnection: KubernetesDevServiceConnection
 
   - stage: DeployProd
     displayName: Deploy Prod
@@ -100,7 +99,7 @@ stages:
         displayName: Deploy Prod
         pool:
           vmImage: $(vmImageName)
-        environment: "DeltaProd"
+        environment: DeltaProd
         strategy:
           runOnce:
             deploy:
@@ -120,6 +119,7 @@ stages:
                     secretName: $(imagePullSecret)
                     namespace: prod
                     dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+                    kubernetesServiceConnection: KubernetesProdServiceConnection
 
                 - task: KubernetesManifest@0
                   name: bake
@@ -139,3 +139,4 @@ stages:
                       $(imagePullSecret)
                     containers: |
                       $(containerRegistry)/$(imageRepository):$(tag)
+                    kubernetesServiceConnection: KubernetesProdServiceConnection
