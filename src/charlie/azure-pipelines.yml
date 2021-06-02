@@ -58,6 +58,11 @@ stages:
                 - download: current
                   artifact: manifests
 
+                - task: KubectlInstaller@0
+                  displayName: Kubectl installer
+                  inputs:
+                    kubectlVersion: 1.18.17
+
                 - task: KubernetesManifest@0
                   displayName: Create imagePullSecret
                   inputs:
@@ -85,7 +90,7 @@ stages:
 
   - stage: DeployProd
     displayName: Deploy Prod
-    dependsOn: Build
+    dependsOn: DeployDev
 
     jobs:
       - deployment: DeployProd
@@ -99,6 +104,11 @@ stages:
               steps:
                 - download: current
                   artifact: manifests
+
+                - task: KubectlInstaller@0
+                  displayName: Kubectl installer
+                  inputs:
+                    kubectlVersion: 1.18.17
 
                 - task: KubernetesManifest@0
                   displayName: Create imagePullSecret
