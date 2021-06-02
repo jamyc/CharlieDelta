@@ -11,7 +11,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: "53774902-ced3-420a-80f8-2acf1ae28858"
+  dockerRegistryServiceConnection: "ContainerRegistryServiceConnection"
   imageRepository: "delta"
   containerRegistry: "acrcloudengineerjamy.azurecr.io"
   tag: "$(Build.BuildId)"
@@ -51,7 +51,7 @@ stages:
         displayName: Deploy Dev
         pool:
           vmImage: $(vmImageName)
-        environment: "DeltaDev.dev"
+        environment: "DeltaDev"
         strategy:
           runOnce:
             deploy:
@@ -69,6 +69,7 @@ stages:
                   inputs:
                     action: createSecret
                     secretName: $(imagePullSecret)
+                    namespace: dev
                     dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
                 - task: KubernetesManifest@0
@@ -83,6 +84,7 @@ stages:
                   displayName: Deploy to Kubernetes cluster
                   inputs:
                     action: deploy
+                    namespace: dev
                     manifests: $(bake.manifestsBundle)
                     imagePullSecrets: |
                       $(imagePullSecret)
@@ -98,7 +100,7 @@ stages:
         displayName: Deploy Prod
         pool:
           vmImage: $(vmImageName)
-        environment: "DeltaProd.prod"
+        environment: "DeltaProd"
         strategy:
           runOnce:
             deploy:
@@ -116,6 +118,7 @@ stages:
                   inputs:
                     action: createSecret
                     secretName: $(imagePullSecret)
+                    namespace: prod
                     dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
                 - task: KubernetesManifest@0
@@ -130,6 +133,7 @@ stages:
                   displayName: Deploy to Kubernetes cluster
                   inputs:
                     action: deploy
+                    namespace: prod
                     manifests: $(bake.manifestsBundle)
                     imagePullSecrets: |
                       $(imagePullSecret)
