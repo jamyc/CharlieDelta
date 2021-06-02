@@ -1,66 +1,65 @@
 pool:
   vmImage: ubuntu-latest
 
-variables: 
+variables:
   azureSubscription: Visual Studio Professional
   appName: cloudengineerjamy
   resourceGroupName: rg-$(appName)
   resourceGroupLocation: westeurope
 
 steps:
-# No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
+  # No official BicepTemplateDeployment task yet. We're using az cli to deploy the bicep templates, as recommended by Alex Frankel: https://github.com/Azure/bicep/issues/1341#issuecomment-802010110.
 
-- pwsh: |
-    $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}'
-    Write-Host "##vso[task.setvariable variable=resourceGroupDeploymentOutputs]$json"
+  # - pwsh: |
+  #     $json = '{"aksClusterName":{"type":"String","value":"akscloudengineerjamy"}}'
+  #     Write-Host "##vso[task.setvariable variable=resourceGroupDeploymentOutputs]$json"
 
-# - bash: az bicep build --file infra/main.bicep
-#   displayName: "Compile Bicep to ARM"
+  - bash: az bicep build --file infra/main.bicep
+    displayName: "Compile Bicep to ARM"
 
-# - task: AzureResourceManagerTemplateDeployment@3
-#   displayName: "Deploy ARM"
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: "Deploy ARM"
+    inputs:
+      azureResourceManagerConnection: $(azureSubscription)
+      action: Create Or Update Resource Group
+      resourceGroupName: $(resourceGroupName)
+      location: $(resourceGroupLocation)
+      templateLocation: Linked artifact
+      csmFile: infra/main.json # created by bash script
+      deploymentMode: Incremental
+      deploymentOutputs: resourceGroupDeploymentOutputs
+      overrideParameters: -appName $(appName)
+
+  - pwsh: |
+      Write-Output '$(resourceGroupDeploymentOutputs)'
+      $outputs = ConvertFrom-Json '$(resourceGroupDeploymentOutputs)'
+      foreach ($output in $outputs.PSObject.Properties) {
+          Write-Host "##vso[task.setvariable variable=DeployOutputs_$($output.Name)]$($output.Value.value)"
+      }
+    displayName: "Convert ARM outputs to Pipeline variables"
+# - task: HelmDeploy@0
+#   displayName: Helm add nginx repo
 #   inputs:
-#     azureResourceManagerConnection: $(azureSubscription)
-#     action: Create Or Update Resource Group
-#     resourceGroupName: $(resourceGroupName)
-#     location: $(resourceGroupLocation)
-#     templateLocation: Linked artifact
-#     csmFile: infra/main.json # created by bash script
-#     deploymentMode: Incremental
-#     deploymentOutputs: resourceGroupDeploymentOutputs
-#     overrideParameters: -appName $(appName)
+#     namespace: ingress-nginx
+#     command: repo
+#     arguments: add nginx-stable https://helm.nginx.com/stable
 
-- pwsh: |
-    Write-Output '$(resourceGroupDeploymentOutputs)'
-    $outputs = ConvertFrom-Json '$(resourceGroupDeploymentOutputs)'
-    foreach ($output in $outputs.PSObject.Properties) {
-        Write-Host "##vso[task.setvariable variable=DeployOutputs_$($output.Name)]$($output.Value.value)"
-    }
-  displayName: "Convert ARM outputs to Pipeline variables"
+# - task: HelmDeploy@0
+#   displayName: Helm repo update
+#   inputs:
+#     namespace: ingress-nginx
+#     command: repo
+#     arguments: update
 
-- task: HelmDeploy@0
-  displayName: Helm add nginx repo
-  inputs:
-    namespace: ingress-nginx
-    command: repo
-    arguments: add nginx-stable https://helm.nginx.com/stable
-    
-- task: HelmDeploy@0
-  displayName: Helm repo update
-  inputs:
-    namespace: ingress-nginx
-    command: repo
-    arguments: update
-
-- task: HelmDeploy@0
-  inputs:
-    connectionType: Azure Resource Manager
-    azureSubscription: Visual Studio Professional
-    azureResourceGroup: $(resourceGroupName)
-    kubernetesCluster: $(DeployOutputs_aksClusterName)
-    namespace: dev
-    command: install
-    chartType: Name
-    chartName: nginx-stable/nginx-ingress
-    releaseName: nginx-ingress-dev
-    overrideValues: controller.ingressClass=ingressdev
+# - task: HelmDeploy@0
+#   inputs:
+#     connectionType: Azure Resource Manager
+#     azureSubscription: Visual Studio Professional
+#     azureResourceGroup: $(resourceGroupName)
+#     kubernetesCluster: $(DeployOutputs_aksClusterName)
+#     namespace: dev
+#     command: install
+#     chartType: Name
+#     chartName: nginx-stable/nginx-ingress
+#     releaseName: nginx-ingress-dev
+#     overrideValues: controller.ingressClass=ingressdev
