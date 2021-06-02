@@ -13,9 +13,9 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: "53774902-ced3-420a-80f8-2acf1ae28858"
   imageRepository: "charlie"
-  containerRegistry: "acrcloudengineer.azurecr.io"
+  containerRegistry: "acrcloudengineerjamy.azurecr.io"
   tag: "$(Build.BuildId)"
-  imagePullSecret: "acrcloudengineer1ad9-auth"
+  imagePullSecret: "acrcloudengineer-auth"
 
   vmImageName: "ubuntu-latest"
 
@@ -58,6 +58,11 @@ stages:
                 - download: current
                   artifact: manifests
 
+                - task: KubectlInstaller@0
+                  displayName: Kubectl installer
+                  inputs:
+                    kubectlVersion: 1.18.17
+
                 - task: KubernetesManifest@0
                   displayName: Create imagePullSecret
                   inputs:
@@ -85,7 +90,7 @@ stages:
 
   - stage: DeployProd
     displayName: Deploy Prod
-    dependsOn: Build
+    dependsOn: DeployDev
 
     jobs:
       - deployment: DeployProd
@@ -99,6 +104,11 @@ stages:
               steps:
                 - download: current
                   artifact: manifests
+
+                - task: KubectlInstaller@0
+                  displayName: Kubectl installer
+                  inputs:
+                    kubectlVersion: 1.18.17
 
                 - task: KubernetesManifest@0
                   displayName: Create imagePullSecret
