@@ -5,7 +5,7 @@ param clusterName string
 param location string = resourceGroup().location
 
 @description('The version of Kubernetes.')
-param kubernetesVersion string = '1.18.14'
+param kubernetesVersion string = '1.18.17'
 
 resource aks 'Microsoft.ContainerService/managedClusters@2020-09-01' = {
   location: location
