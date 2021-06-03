@@ -6,7 +6,3 @@ bases:
 
 patches:
   - ingress_annotation.yaml
-
-images:
-  - name: charlie
-    newTag: prod

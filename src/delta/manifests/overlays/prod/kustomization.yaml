@@ -6,7 +6,3 @@ bases:
 
 resources:
   - hpa.yaml
-
-images:
-  - name: delta
-    newTag: prod
