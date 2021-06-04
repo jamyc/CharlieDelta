@@ -19,16 +19,16 @@ Tech/tools used:
 	- src/delta/azure-pipelines.yml
 - Run the infrastructure pipeline
 	- This will deploy an ACR and AKS resource using Bicep
-- Execute `initial_setup.sh` from a terminal (requires kubectl and az cli)
+- Execute `initial_setup.sh` from a terminal (requires kubectl, helm and az cli)
 	- This will create dev + prod namespaces, public IPs and ingresses. This could theoretically be integrated in an Azure DevOps pipeline. 
 - Create new Azure DevOps Service Connections:
-	- Docker Registry (ACR). Service connection name: ContainerRegistryServiceConnection
+	- Docker Registry (ACR). Service connection name: `ContainerRegistryServiceConnection`
 	- Kubernetes (Azure Subscription):
-		- Service connection name: KubernetesDevServiceConnection
-		- Namespace: dev
+		- Service connection name: `KubernetesDevServiceConnection`
+		- Namespace: `dev`
 	- Kubernetes (Azure Subscription):
-		- Service connection name: KubernetesProdServiceConnection
-		- Namespace: prod
+		- Service connection name: `KubernetesProdServiceConnection`
+		- Namespace: `prod`
 - Run the pipelines for Charlie + Delta
 	- These 'app' pipelines have three stages:
 		- Build: Builds and tags the Docker image and pushes it to ACR
