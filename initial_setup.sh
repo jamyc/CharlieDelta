@@ -1,3 +1,4 @@
+#!/bin/bash
 # Setup kubeconfig
 az aks get-credentials --resource-group rg-cloudengineerjamy2 --name akscloudengineerjamy2 
 
